@@ -1,4 +1,5 @@
 from database.db_manager import DbManager
+from utils import utils
 
 #Viene creato l'oggetto per la gestione del database
 db = DbManager()
@@ -34,11 +35,9 @@ while True:
         if choice == '0':
             visualizzaMenu()
         if choice == '1':
-            #TODO: inserimento autore
-            pass
+            utils.inserisciAutore()
         if choice == '2':
-            #TODO: inserimento libro
-            pass
+            utils.inserisciLibro()
 
     #Menu visualizzazione
     if opz == '2':
@@ -48,10 +47,12 @@ while True:
             visualizzaMenu()
         if choice == '1':
             #TODO: visualizzazione autore
-            pass
+            print(db.visualizzaAutore())
+            input("Premi un tasto per continuare")
         if choice == '2':
+            print(db.visualizzaLibro())
+            input("Premi un tasto per continuare")
             #TODO: visualizzazione libro
-            pass
 
     #Menu modifica
     if opz == '3':

@@ -61,11 +61,10 @@ while True:
             if choice == '0':
                 visualizzaMenu()
             if choice == '1':
-                #TODO: modifica autore
-                pass
+                core.modificaAutore(db)
             if choice == '2':
                 #TODO: modifica libro
-                pass
+                core.modificaLibro(db)
 
     #Menu eliminazione
     if opz == '4':

@@ -1,5 +1,6 @@
 from datetime import datetime
 
+#Funzioni di validazione delle variabili
 def validaData(data):
     try:
         data = datetime.strptime(data, "%d-%m-%Y")

@@ -4,46 +4,44 @@ from datetime import datetime
 
 
 #INSERIMENTO
+#TODO: creare delle funzioni di ordine superiore per "snellire il codice" riguardo la validazione dei valori
 def inserisciAutore(db):
-    #Questo ciclo serve per far reinserire i dati all'utente nel caso l'autore sia già presente nel database
+        #L'utente inserisce il nome dell'autore; se il nome non è valido, viene richiesto di inserirlo.
+        #Se il nome inserito dall'utente è valido, viene effettuata una ricerca nel database per controllare
+        #che l'autore non sia già presente. Se l'autore esiste già, viene richiesto all'utente di inserire un nuovo nome.
     while True:
-        #Nel caso in cui il nome dell'autore sia vuoto, l'utente dovrà inserire di nuovo il dato
-        while True:
-            nome = input("Nome e cognome: ").lower()
-            if nome == '':
-                print("Il nome non è valido")
-            else:
-                break
-
-        #Validazione della data; se la data non e' del giusto formato o è vuota, l'utente dovrà reinserirla
-        while True:
-            data_nascita = input("Data nascita (gg-mm-aaaa): ")
-            if not validazione.validaData(data_nascita) or data_nascita == '':
-                print("La data inserita non e' valida!")
-            else:
-                break
-
-        #Validazione dell'email
-        while True:
-            email = input("Email: ")
-            if not validazione.validaEmail(email) or email == '':
-                print("L'email non è valida!")
-            else:
-                break
-
-        #Se l'autore è già presente nel database, l'utente dovrà reinserire i dati
+        nome = input("Nome e cognome: ").lower()
+        if nome == '':
+            print("Il nome non è valido")
         if db.cercaAutorePerNome(nome):
-            print("L'autore e' gia' presente nel database!")
-            input("Premi un tasto per inserire di nuovo i dati. ")
+            print("L'autore è già presente nel database! Non può essere inserito di nuovo!")
+            print("Premi invio per inserire di nuovo i dati!")
         else:
             break
+
+    #Validazione della data; se la data non e' del giusto formato o è vuota, l'utente dovrà reinserirla
+    while True:
+        data_nascita = input("Data nascita (gg-mm-aaaa): ")
+        if not validazione.validaData(data_nascita) or data_nascita == '':
+            print("La data inserita non e' valida!")
+        else:
+            break
+
+    #Validazione dell'email
+    while True:
+        email = input("Email: ")
+        if not validazione.validaEmail(email) or email == '':
+            print("L'email non è valida!")
+        else:
+            break
+
     #Nel caso in cui i dati siano corretti e l'autore non è già presente nel database, procedo con l'inserimento del nuovo record
     db.inserisciAutore(nome,data_nascita,email)
     print(chr(27) + "[2J")
     print("Autore aggiunto correttamente al database!")
     input("Premi un tasto per continuare.")
 
-
+#TODO: se l'autore del libro non esiste, chiedere all'utente se vuole inserirne anche i dati
 def inserisciLibro(db):
     while True:
         #Validazione titolo
@@ -62,51 +60,47 @@ def inserisciLibro(db):
             else:
                 break
 
-        #Validazione del numero di pagine e del prezzo;
-        #Questi due valori devono essere rispettivamente intero e float, nel caso in cui siano diversi, l'utente dovrà reinserire i dati
-        while True:
-            numero_pagine = input("Numero delle pagine: ")
-            if not validazione.validaInt(numero_pagine) or numero_pagine == '':
-                print("Il numero delle pagine non e' valido!")
-            else:
-                break
-
-        while True:
-            prezzo = input("Prezzo (utilizza il punto per i valori decimali): ")
-            if not validazione.validaFloat(prezzo) or prezzo == '' :
-                print("Il prezzo non e' valido!")
-            else:
-                break
-
-        #Validazione della casa editrice
-        while True:
-            casa_editrice = input("Casa editrice: ").lower()
-            if casa_editrice == '':
-                print("La casa editrice non è valida!")
-            else:
-                break
-
-        #Nel caso in cui il libro sia già presente nel database, l'utente dovrà reinserire i dati
+        #Dopo che l'utente ha inserito titolo e autore del libro, controllo che il libro non sia già presente nel database.
+        #Se il libro è già esistente, allora l'utente dovrà inserire un nuovo titolo e un nuovo autore,
+        #altrimenti, inserirà le altre informazioni riguardanti il libro.
         if db.cercaLibroTitoloAutore(titolo,nome_autore):
             print("Il libro è già presente nel database")
-            input("Premi un tasto per inserire di nuovo i dati.")
-
-        #Se i dati sono corretti, cerco il nome dell'autore inserito dall'utente all'interno della tabella degli autori;
-        #se trovo riscontro, il campo della chiave esterna del libro corrisponderà alla chiave primaria dell'autore trovato;
-        #se non trovo l'autore, lascio il campo vuoto.
+            input("Premi invio per inserire di nuovo i dati.")
         else:
-            autore_id = db.cercaAutorePerNome(nome_autore)
-            if autore_id:
-                autore_id = autore_id[0]
-                break
-            else:
-                autore_id = ''
-                #while True:
-                #    autore_id = input("Id autore: ")
-                #    if autore_id == '':
-                    #        print("L'id dell'autore non è valido!")
-                #    else:
-                    #        break
+            break
+
+    #Validazione del numero di pagine e del prezzo;
+    #Questi due valori devono essere rispettivamente intero e float, nel caso in cui siano diversi,l'utente dovrà reinserire i dati
+    while True:
+        numero_pagine = input("Numero delle pagine: ")
+        if not validazione.validaInt(numero_pagine) or numero_pagine == '':
+            print("Il numero delle pagine non e' valido!")
+        else:
+            break
+
+    while True:
+        prezzo = input("Prezzo (utilizza il punto per i valori decimali): ")
+        if not validazione.validaFloat(prezzo) or prezzo == '' :
+            print("Il prezzo non e' valido!")
+        else:
+            break
+
+    #Validazione della casa editrice
+    while True:
+        casa_editrice = input("Casa editrice: ").lower()
+        if casa_editrice == '':
+            print("La casa editrice non è valida!")
+        else:
+            break
+
+    #Se i dati sono corretti, cerco il nome dell'autore inserito dall'utente all'interno della tabella degli autori;
+    #se trovo riscontro, il campo della chiave esterna del libro corrisponderà alla chiave primaria dell'autore trovato;
+    #se non trovo l'autore, lascio il campo vuoto.
+    autore_id = db.cercaAutorePerNome(nome_autore)
+    if autore_id:
+        autore_id = autore_id[0]
+    else:
+        autore_id = ''
 
     #Una volta memorizzati tutti i dati inseriti dall'utente, procedo con l'inserimento del nuovo libro all'interno del database
     db.inserisciLibro(titolo,nome_autore,numero_pagine,prezzo,casa_editrice,autore_id)

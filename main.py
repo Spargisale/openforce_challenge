@@ -72,9 +72,7 @@ while True:
                 if choice == '0':
                     visualizzaMenu()
                 if choice == '1':
-                    #TODO: elimina autore
                     core.eliminaAutore(db)
-
                 if choice == '2':
                     core.eliminaLibro(db)
 
@@ -87,7 +85,7 @@ while True:
                         visualizzaMenu()
                     if choice == '1':
                         #TODO: importa autore
-                        pass
+                        core.importaAutori(db,'autori.csv')
                     if choice == '2':
                         #TODO: importa libro
-                        pass
+                        core.importaLibri(db,'libri.csv')

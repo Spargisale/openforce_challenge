@@ -1,7 +1,8 @@
 from database.db_manager import DbManager
 from validazione import validazione
 from datetime import datetime
-
+import csv
+import time
 
 #INSERIMENTO
 def inserisciAutore(db):
@@ -204,3 +205,45 @@ def eliminaAutore(db):
                 print("Eliminazione annullata.")
                 input("Premi invio per continuare.")
                 break
+
+
+
+
+def importaAutori(db,file):
+    with open(file, newline='',encoding='utf-8') as file_csv:
+        reader = csv.DictReader(file_csv)
+        for row in reader:
+            print("Aggiungendo " + row['nome'])
+            if db.cercaAutorePerNome(row['nome']):
+                print("Autore già presente!")
+                print("")
+                time.sleep(0.2)
+            else:
+                db.inserisciAutore(row['nome'],row['data_nascita'],row['email'])
+                print("Autore inserito!")
+                print("")
+                time.sleep(0.2)
+        print("Dati degli autori importati con successo.")
+        input("Premi invio per continuare")
+
+
+def importaLibri(db,file):
+    with open(file, newline='',encoding='utf-8') as file_csv:
+        reader = csv.DictReader(file_csv)
+        for row in reader:
+            print("Aggiungendo " + row['titolo'])
+            if db.cercaLibroTitoloAutore(row['titolo'],row['nome_autore']):
+                print("Libro già presente!")
+                print("")
+                time.sleep(0.2)
+            else:
+                autore = db.cercaAutorePerNome(row['nome_autore'])
+                if autore:
+                    db.inserisciLibro(row['titolo'],row['nome_autore'],row['numero_pagine'],row['prezzo'],row['casa_editrice'],autore[0])
+                    print("Libro inserito!")
+                    print("")
+                    time.sleep(0.2)
+                else:
+                    print("Impossibile associare questo libro, l'autore non esiste nel database.")
+        print("Dati dei libri importati con successo.")
+        input("Premi invio per continuare")

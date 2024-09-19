@@ -8,7 +8,7 @@ def visualizzaMenu():
     print(chr(27) + "[2J")
     print("0- Esci")
     print("1- Aggiungi autore/libro")
-    print("2- Visualizza autori/libri")
+    print("2- Visualizza tabella autori/libri")
     print("3- Modifica autore/libro")
     print("4- Elimina autore/libro")
     print("5- Importa autori/libri da CSV")
@@ -46,13 +46,13 @@ while True:
         if choice == '0':
             visualizzaMenu()
         if choice == '1':
-            #TODO: visualizzazione autore
-            print(db.visualizzaAutore())
-            input("Premi un tasto per continuare")
+            print(chr(27) + "[2J")
+            print(db.visualizzaAutori())
+            input("Premi invio per continuare")
         if choice == '2':
-            print(db.visualizzaLibro())
-            input("Premi un tasto per continuare")
-            #TODO: visualizzazione libro
+            print(chr(27) + "[2J")
+            print(db.visualizzaLibri())
+            input("Premi invio per continuare")
 
     #Menu modifica
     if opz == '3':
@@ -63,7 +63,6 @@ while True:
             if choice == '1':
                 core.modificaAutore(db)
             if choice == '2':
-                #TODO: modifica libro
                 core.modificaLibro(db)
 
     #Menu eliminazione
@@ -74,10 +73,11 @@ while True:
                     visualizzaMenu()
                 if choice == '1':
                     #TODO: elimina autore
-                    pass
+                    core.eliminaAutore(db)
+
                 if choice == '2':
-                    #TODO: elimina libro
-                    pass
+                    core.eliminaLibro(db)
+
 
     #Menu import CSV
     if opz == '5':

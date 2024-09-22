@@ -1,8 +1,14 @@
 from database.db_manager import DbManager
 from core import core
+from api.api import app
+from threading import Thread
 
 #Viene creato l'oggetto per la gestione del database
 db = DbManager()
+
+#Funzione per l'avvio dell'API
+def startFlaskApp():
+    app.run(debug=True, use_reloader=False)
 
 def visualizzaMenu():
     print(chr(27) + "[2J")
@@ -12,6 +18,7 @@ def visualizzaMenu():
     print("3- Modifica autore/libro")
     print("4- Elimina autore/libro")
     print("5- Importa autori/libri da CSV")
+    print("6- Avvia server per le richieste API")
 
 def sottoMenu():
     print(chr(27) + "[2J")
@@ -23,7 +30,6 @@ def sottoMenu():
 while True:
     visualizzaMenu()
     opz = input("Opzione: ")
-
     #Esci
     if opz == '0':
         break
@@ -84,8 +90,12 @@ while True:
                     if choice == '0':
                         visualizzaMenu()
                     if choice == '1':
-                        #TODO: importa autore
                         core.importaAutori(db,'autori.csv')
                     if choice == '2':
-                        #TODO: importa libro
                         core.importaLibri(db,'libri.csv')
+
+
+    if opz == '6':
+        if __name__ == "__main__":
+            flask_thread = Thread(target=startFlaskApp)
+            flask_thread.start()

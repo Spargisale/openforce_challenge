@@ -5,7 +5,7 @@ import re
 
 
 #Il nome dell'autore ammette parole multiple, lettere accentate, trattino e punto
-#E.g. "Josè Garcìa Márquez", "J.K. Rowling", "Anne-Marie Jenson"
+#E.g. "Josè Garcìa Márquez", "Anne-Marie Jenson"
 def validaNome(nome):
     pattern_nome = r"^[A-Za-zÀ-ÖØ-öø-ÿ]+(?:[-\s][A-Za-zÀ-ÖØ-öø-ÿ]+)+(?:\s(?:[A-Za-zÀ-ÖØ-öø-ÿ]+\.))?$"
     try:

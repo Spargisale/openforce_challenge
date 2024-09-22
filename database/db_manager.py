@@ -7,8 +7,8 @@ class DbManager:
     #Nel costruttore viene effettuata la connessione al database e viene chiamata la funzione per creare le tabelle delle entita'
     def __init__(self,nome_db="openforce.db"):
         self.conn = sqlite3.connect(nome_db)
-        #Gestione delle chiavi esterne da parte di sqlite
-        self.conn.execute("PRAGMA foreign_keys = ON")
+        self.conn.row_factory = sqlite3.Row  #Permette di accedere ai risultati come dizionari
+        self.conn.execute("PRAGMA foreign_keys = ON") #Gestione delle chiavi esterne da parte di sqlite
         self.creaTabelle()
 
     #Query per la creazione delle tabelle delle entita'
@@ -82,14 +82,14 @@ class DbManager:
     def cercaAutorePerNome(self,nome):
         with self.conn:
             cur = self.conn.cursor()
-            cur.execute("SELECT * FROM autore WHERE nome = ?",(nome,))
+            cur.execute("SELECT * FROM autore WHERE nome LIKE ?",('%'+str(nome)+'%',))
             return cur.fetchone()
 
     #Cerca e restituisce il libro
     def cercaLibroTitoloAutore(self,titolo,nome_autore):
         with self.conn:
             cur = self.conn.cursor()
-            cur.execute("SELECT * FROM libro WHERE titolo = ? AND nome_autore = ?",(titolo,nome_autore,))
+            cur.execute("SELECT * FROM libro WHERE titolo LIKE ? AND nome_autore LIKE ?",('%'+str(titolo)+'%','%'+str(nome_autore)+'%',))
             return cur.fetchone()
 
     #Cerca e restituisce tutti i libri associati ad un determinato autore
@@ -99,6 +99,18 @@ class DbManager:
             cur.execute("""
                 SELECT * FROM libro
                 WHERE autore_id = ?""", (autore_id,))
+            return cur.fetchall()
+
+    #Visualizza i libri associati all'autore per l'API
+    def libriPerAutoreAPI(self,nome_autore):
+        with self.conn:
+            cur = self.conn.cursor()
+            cur.execute('''
+                SELECT libro.titolo, libro.nome_autore, libro.numero_pagine,libro.prezzo, libro.casa_editrice
+                FROM libro
+                JOIN autore ON libro.autore_id = autore.id
+                WHERE autore.nome LIKE ?
+            ''', ('%'+str(nome_autore+'%'),))
             return cur.fetchall()
 
 
@@ -124,6 +136,19 @@ class DbManager:
                WHERE id = ?""", (titolo,nome_autore,numero_pagine,prezzo,casa_editrice,id))
             self.conn.commit()
 
+
+    #Aggiorna i record dei libri nel momento in cui si modifica il nome di un autore
+    def aggiornaLibroConNuovoAutore(self,autore_id):
+        with self.conn:
+            cur = self.conn.cursor()
+            cur.execute("""
+                UPDATE libro
+                SET nome_autore = (SELECT autore.nome
+                                   FROM autore
+                                   WHERE autore.id = libro.autore_id)
+                WHERE libro.autore_id = ?
+                """, (autore_id,))
+            self.conn.commit()
 
     #ELIMINAZIONE
     def eliminaLibro(self,titolo,nome_autore):

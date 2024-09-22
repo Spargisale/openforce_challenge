@@ -3,6 +3,7 @@ from validazione import validazione
 from datetime import datetime
 import csv
 import time
+import re
 
 #INSERIMENTO
 def inserisciAutore(db):
@@ -12,6 +13,7 @@ def inserisciAutore(db):
     #se è già presente, l'utente dovrà inserire di nuovo un nuovo nome.
     while True:
         nome = validazione.chiediInputUtente("Nome e cognome dell'autore: ",validazione.validaNome, "Il nome dell'autore inserito non è valido!")
+        nome = re.sub(r'[^\w\s]', '', nome) #Rimuovo i caratteri speciali dalla stringa
         if db.cercaAutorePerNome(nome):
             print("L'autore è già presente nel database e non può essere inserito di nuovo!")
         else:
@@ -35,6 +37,8 @@ def inserisciLibro(db):
     while True:
         titolo = validazione.chiediInputUtente("Titolo del libro: ",validazione.validaTitolo,"Il titolo inserito non è valido!")
         nome_autore = validazione.chiediInputUtente("Autore: ",validazione.validaNome,"Il nome inserito non è valido!")
+        titolo = re.sub(r'[^\w\s]', '', titolo)
+        nome_autore = re.sub(r'[^\w\s]', '', nome_autore)
 
         if db.cercaLibroTitoloAutore(titolo,nome_autore):
             print("Il libro è già presente nel database e non può essere inserito di nuovo!")
@@ -72,6 +76,7 @@ def modificaAutore(db):
     #se non è presente, l'utente dovrà inserire di nuovo un nuovo nome.
     while True:
         nome = validazione.chiediInputUtente("Nome dell'autore da modificare: ",validazione.validaNome,"Il nome inserito non è valido")
+        nome = re.sub(r'[^\w\s]', '', nome)
         autore = db.cercaAutorePerNome(nome)
         if not autore:
             print("L'autore non e' presente nel database!")
@@ -86,6 +91,7 @@ def modificaAutore(db):
     print("Inserisci i nuovi dati dell'autore: ")
 
     nome = validazione.chiediInputUtente("Nome: ",validazione.validaNome,"Il nome inserito non è valido!")
+    nome = re.sub(r'[^\w\s]', '', nome)
     data_nascita = validazione.chiediInputUtente("Data di nascita (gg-m-aaaa): ",validazione.validaData,"La data inserita non è valida!")
     email = validazione.chiediInputUtente("Email: ", validazione.validaEmail, "L'email inserita non è valida!")
 
@@ -93,6 +99,10 @@ def modificaAutore(db):
     #notifica l'utente e torna al menu principale
     #Il campo "autore[0]" corrisponde all'id dell'autore trovato, necessario per modificare i dati di quello specifico record
     db.aggiornaAutore(nome,data_nascita,email,autore[0])
+
+    #Essendo il nome dell'autore presente anche nella tabella dei libri, se quest'ultimo viene modificato,
+    #è necessario aggiornare anche la colonna con il nuovo nome dell'autore nei record dei libri ad esso associati
+    db.aggiornaLibroConNuovoAutore(autore[0])
     print("Autore modificato correttamente")
     input("Premi invio per continuare.")
 
@@ -104,7 +114,9 @@ def modificaLibro(db):
         #Faccio cercare all'utente il libro da modificare tramite titolo e nome dell'autore;
         #se il libro non viene trovato, l'utente dovrà inserire di nuovo i dati, altrimenti la funzione procede con l'inserimento dei nuovi attributi
         titolo = validazione.chiediInputUtente("Inserisci il titolo del libro da modificare: ",validazione.validaTitolo,"Il titolo inserito non è valido!")
+        titolo = re.sub(r'[^\w\s]', '', titolo)
         nome_autore = validazione.chiediInputUtente("Inserisci l'autore del libro: ",validazione.validaNome,"Il nome inserito non è valido!")
+        nome_autore = re.sub(r'[^\w\s]', '', nome_autore)
         libro = db.cercaLibroTitoloAutore(titolo,nome_autore)
         if not libro:
             print("Il libro non è presente nel database!")
@@ -119,7 +131,9 @@ def modificaLibro(db):
     print("Inserisci i nuovi dati del libro: ")
 
     titolo = validazione.chiediInputUtente("Titolo: ",validazione.validaTitolo,"Il titolo inserito non è valido!")
+    titolo = re.sub(r'[^\w\s]', '', titolo)
     nome_autore = validazione.chiediInputUtente("Autore: ",validazione.validaNome,"Il nome inserito non è valido!")
+    nome_autore = re.sub(r'[^\w\s]', '', nome_autore)
     numero_pagine = validazione.chiediInputUtente("Numero pagine: ",validazione.validaInt,"Il valore inserito non è valido!")
     prezzo = validazione.chiediInputUtente("Prezzo (i decimali vanno inseriti con il punto e.g. 12.50): ",validazione.validaFloat,"Il valore inserito non è valido!")
     casa_editrice = validazione.chiediInputUtente("Casa editrice: ",validazione.validaTitolo,"Il nome inserito non è valido!")
@@ -131,14 +145,16 @@ def modificaLibro(db):
     input("Premi invio per continuare.")
 
 
-
+#ELIMINAZIONE
 def eliminaLibro(db):
     print(chr(27) + "[2J")
     while True:
         #Faccio cercare all'utente il libro da eliminare tramite titolo e nome dell'autore;
         #se il libro non viene trovato, l'utente dovrà inserire di nuovo i dati
         titolo = validazione.chiediInputUtente("Inserisci il titolo del libro da eliminare: ",validazione.validaTitolo,"Il titolo inserito non è valido!")
+        titolo = re.sub(r'[^\w\s]', '', titolo)
         nome_autore = validazione.chiediInputUtente("Inserisci l'autore del libro: ",validazione.validaNome,"Il nome inserito non è valido!")
+        nome_autore = re.sub(r'[^\w\s]', '', nome_autore)
 
         libro = db.cercaLibroTitoloAutore(titolo,nome_autore)
         if not libro:
@@ -172,6 +188,7 @@ def eliminaAutore(db):
     #se l'autore non viene trovato, l'utente dovrà inserire di nuovo i dati
     while True:
         nome = validazione.chiediInputUtente("Nome dell'autore da modificare: ",validazione.validaNome,"Il nome inserito non è valido")
+        nome = re.sub(r'[^\w\s]', '', nome)
 
         autore = db.cercaAutorePerNome(nome)
         if not autore:
@@ -208,12 +225,15 @@ def eliminaAutore(db):
 
 
 
-
+#FILE CSV
 def importaAutori(db,file):
+    #Apro e leggo il file CSV degli autori
     with open(file, newline='',encoding='utf-8') as file_csv:
         reader = csv.DictReader(file_csv)
+
         for row in reader:
             print("Aggiungendo " + row['nome'])
+            #Se l'autore è gia' presente nel database, non lo aggiungo
             if db.cercaAutorePerNome(row['nome']):
                 print("Autore già presente!")
                 print("")
@@ -228,16 +248,22 @@ def importaAutori(db,file):
 
 
 def importaLibri(db,file):
+    #Apro e leggo il file CSV dei libri
     with open(file, newline='',encoding='utf-8') as file_csv:
         reader = csv.DictReader(file_csv)
+
         for row in reader:
             print("Aggiungendo " + row['titolo'])
+            #Se il libro è già presente nel database, non lo aggiungo
             if db.cercaLibroTitoloAutore(row['titolo'],row['nome_autore']):
                 print("Libro già presente!")
                 print("")
                 time.sleep(0.2)
             else:
+                #Se il libro non è già presente, verifico se l'autore si trova nel database in modo da associarlo al libro
                 autore = db.cercaAutorePerNome(row['nome_autore'])
+                #Se l'autore è presente, associo il libro con il suo identificativo, altrimenti non inserisco il libro.
+                #TODO: inserire anche dati relativi all'autore nel momento dell'inserimento del libro
                 if autore:
                     db.inserisciLibro(row['titolo'],row['nome_autore'],row['numero_pagine'],row['prezzo'],row['casa_editrice'],autore[0])
                     print("Libro inserito!")

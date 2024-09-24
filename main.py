@@ -2,6 +2,9 @@ from database.db_manager import DbManager
 from core import core
 from api.api import app
 from threading import Thread
+import platform
+import os
+
 
 #Viene creato l'oggetto per la gestione del database
 db = DbManager()
@@ -11,7 +14,7 @@ def startFlaskApp():
     app.run(debug=True, use_reloader=False)
 
 def visualizzaMenu():
-    print(chr(27) + "[2J")
+    core.pulisciSchermo()
     print("0- Esci")
     print("1- Aggiungi autore/libro")
     print("2- Visualizza tabella autori/libri")
@@ -21,7 +24,7 @@ def visualizzaMenu():
     print("6- Avvia server per le richieste API")
 
 def sottoMenu():
-    print(chr(27) + "[2J")
+    core.pulisciSchermo()
     print("1- Autore")
     print("2- Libro")
     print("0- Torna indietro al menu")
@@ -52,11 +55,11 @@ while True:
         if choice == '0':
             visualizzaMenu()
         if choice == '1':
-            print(chr(27) + "[2J")
+            core.pulisciSchermo()
             print(db.visualizzaAutori())
             input("Premi invio per continuare")
         if choice == '2':
-            print(chr(27) + "[2J")
+            core.pulisciSchermo()
             print(db.visualizzaLibri())
             input("Premi invio per continuare")
 

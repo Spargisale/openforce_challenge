@@ -12,6 +12,8 @@ Mentre l'**autore** è composto da:
 
 La memorizzazione dei dati viene gestita tramite **SQLITE**, mentre per le richieste API viene utilizzato **Flask**.
 
+## Screenshots
+
 <img src="./images/01.png" width="18%"></img> <img src="./images/02.png" width="18%"></img> <img src="./images/03.png" width="18%"></img> <img src="./images/04.png" width="18%"></img> <img src="./images/05.png" width="18%"></img> <img src="./images/06.png" width="18%"></img> <img src="./images/07.png" width="18%"></img> <img src="./images/08.png" width="18%"></img> <img src="./images/09.png" width="18%"></img> <img src="./images/10.png" width="18%"></img> 
 
 # Istruzioni di installazione
@@ -75,3 +77,17 @@ python main.py
 - **Importazione dei dati tramite CSV:** sempre tramite CLI è possibile importare dati relativi ad autori e libri tramite file CSV precedentemente formattati. I file devono trovarsi nella cartella radice del progetto e devono essere nominati `libri.csv` e `autori.csv`.
 
 - **Richieste API:** è possibile attivare (nel menu principale, all'apertura del programma) un server locale che gestisce richieste all' API. Attualmente è implementato (tramite richiesta `GET`) un endpoint dove è possibile inserire il nome dell'autore per trovare tutti i libri ad esso associati.
+
+# Vincoli
+
+- Quando si inserisci il `nome` dell'autore, non è possibile inserire un nome composto da una sola parola come ad esempio *"Luca"*, *"Paolo"* o *"Rossi"*, bisogna inserire un nome composto da almeno 2 parole come ad esempio *"Mario Rossi"* o *"Marco Rosario Marsili"*. 
+
+- La `data di nascita` deve rispettare il formato `gg-mm-aaaa` o `gg-m-aaaa`. Inoltre non è possibile inserire giorni che non compongono il mese (ad esempio il 30 Febbraio).
+
+- Il `prezzo` dei libri è espresso in float e per inserirlo correttamente bisogna utilizzare il punto come separatore decimale, come ad esempio *"12.75"* o *"39.99"*.
+
+- L'`email` deve rispettare anch'essa il formato standard; non è possibile inserire parole uniche o più parole. Alcuni esempi di email sono *"lucarossi@example.it"*, *"mario.bianchi@gmail.com"* e così via.
+
+- Una volta avviato il server per le richieste API, non sarà più possibile eseguire le altre operazioni da terminale, sarà necessario quindi terminare l'esecuzione del programma con `Ctrl+C` e rimandarlo in esecuzione.
+
+

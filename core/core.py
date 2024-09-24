@@ -4,10 +4,19 @@ from datetime import datetime
 import csv
 import time
 import re
+import os
+import platform
+
+def pulisciSchermo():
+    if platform.system() == 'Windows':
+        os.system("cls")
+    else:
+        os.system("clear")
+
 
 #INSERIMENTO
 def inserisciAutore(db):
-    print(chr(27) + "[2J")
+    pulisciSchermo()
 
     #L'utente inserisce il nome dell'autore che viene validato, poi cerca se l'autore è presente nel database:
     #se è già presente, l'utente dovrà inserire di nuovo un nuovo nome.
@@ -25,13 +34,13 @@ def inserisciAutore(db):
 
     #A questo punto viene creato un nuovo record tramite query al database
     db.inserisciAutore(nome,data_nascita,email)
-    print(chr(27) + "[2J")
+    pulisciSchermo()
     print("Autore aggiunto correttamente al database!")
     input("Premi invio per continuare.")
 
 
 def inserisciLibro(db):
-    print(chr(27) + "[2J")
+    pulisciSchermo()
     #L'utente inserisce il nome e titolo del libro che vengono validati, poi cerca se il libro è presente nel database:
     #se è già presente, l'utente dovrà inserire nuovi dati.
     while True:
@@ -58,7 +67,7 @@ def inserisciLibro(db):
     if autore_id:
         autore_id = autore_id[0]
         db.inserisciLibro(titolo,nome_autore,numero_pagine,prezzo,casa_editrice,autore_id)
-        print(chr(27) + "[2J")
+        pulisciSchermo()
         print("Libro aggiunto correttamente al database!")
         input("Premi invio per continuare.")
     else:
@@ -70,7 +79,7 @@ def inserisciLibro(db):
 
 #MODIFICA
 def modificaAutore(db):
-    print(chr(27) + "[2J")
+    pulisciSchermo()
 
     #L'utente inserisce il nome dell'autore da modificare che viene validato, poi cerca se l'autore è presente nel database:
     #se non è presente, l'utente dovrà inserire di nuovo un nuovo nome.
@@ -85,7 +94,7 @@ def modificaAutore(db):
             break
 
     #L'autore è stato trovato: visualizzo le informazioni sull'autore trovato e chiedo all' utente di inserire nuovi dati per la modifica del record
-    print(chr(27) + "[2J")
+    pulisciSchermo()
     print("Autore trovato!")
     print(db.visualizzaAutore(nome))
     print("Inserisci i nuovi dati dell'autore: ")
@@ -109,7 +118,7 @@ def modificaAutore(db):
 
 
 def modificaLibro(db):
-    print(chr(27) + "[2J")
+    pulisciSchermo()
     while True:
         #Faccio cercare all'utente il libro da modificare tramite titolo e nome dell'autore;
         #se il libro non viene trovato, l'utente dovrà inserire di nuovo i dati, altrimenti la funzione procede con l'inserimento dei nuovi attributi
@@ -125,7 +134,7 @@ def modificaLibro(db):
             break
 
     #Il libro è stato trovato: visualizzo le informazioni del libro e chiedo all' utente di inserire i nuovi dati per la modifica
-    print(chr(27) + "[2J")
+    pulisciSchermo()
     print("Libro trovato!")
     print(db.visualizzaLibro(titolo,nome_autore))
     print("Inserisci i nuovi dati del libro: ")
@@ -147,7 +156,7 @@ def modificaLibro(db):
 
 #ELIMINAZIONE
 def eliminaLibro(db):
-    print(chr(27) + "[2J")
+    pulisciSchermo()
     while True:
         #Faccio cercare all'utente il libro da eliminare tramite titolo e nome dell'autore;
         #se il libro non viene trovato, l'utente dovrà inserire di nuovo i dati
@@ -183,7 +192,7 @@ def eliminaLibro(db):
 
 
 def eliminaAutore(db):
-    print(chr(27) + "[2J")
+    pulisciSchermo()
     #Faccio cercare all'utente l'autore da eliminare tramite il nome;
     #se l'autore non viene trovato, l'utente dovrà inserire di nuovo i dati
     while True:
@@ -198,7 +207,7 @@ def eliminaAutore(db):
             break
 
     #L'autore è stato trovato, ne visualizzo i dati
-    print(chr(27) + "[2J")
+    pulisciSchermo()
     print("Autore trovato!")
     print(db.visualizzaAutore(nome))
 

@@ -4,27 +4,11 @@ Il progetto prevede lo sviluppo di un'applicazione CLI in **python** che permett
 
 Le informazioni che caratterizzano l'entità "**libro**" sono: 
 
-- `id`
-
-- `titolo`
-
-- `nome_autore`
-
-- `numero_pagine`
-
-- `prezzo`
-
-- `casa editrice`
+- `id`,`titolo`,`nome_autore`,`numero_pagine`,`prezzo`,`casa_editrice`
 
 Mentre l'**autore** è composto da:
 
-- `id`
-
-- `nome`
-
-- `data_di_nascita`
-
-- `email`
+- `id`,`nome`,`data_di_nascita`,`email`
 
 La memorizzazione dei dati viene gestita tramite **SQLITE**, mentre per le richieste API viene utilizzato **Flask**.
 
